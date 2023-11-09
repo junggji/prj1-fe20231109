@@ -31,6 +31,7 @@ export function BoardWrite() {
           status: "success",
         });
       })
+      // badRequest 발생시(blank) 응답 코드
       .catch((error) => {
         console.log(error.response.status);
         if (error.response.status === 400) {
@@ -38,6 +39,7 @@ export function BoardWrite() {
             description: "작성한 내용을 확인해주세요.",
             status: "error",
           });
+          // 그 외의 오류 발생시 응답 코드
         } else {
           toast({
             description: "저장 중에 문제가 발생하였습니다.",
