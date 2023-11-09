@@ -9,6 +9,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function BoardWrite() {
   const [title, setTitle] = useState("");
@@ -17,9 +18,12 @@ export function BoardWrite() {
   // 전송상태(전송중이면 클릭못하게)
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const navigate = useNavigate();
+
   //chakra ui의 toast
   const toast = useToast();
   function handleSubmit() {
+    // 메소드 시작시(버튼 클릭시) 로딩중 활성화 (저장버튼 비활성화)
     setIsSubmitting(true);
     axios
       .post("/api/board/add", {
@@ -33,6 +37,8 @@ export function BoardWrite() {
           description: "새 글이 저장되었습니다.",
           status: "success",
         });
+        // 끝나면 홈으로 이동****
+        navigate("/");
       })
       // badRequest 발생시(blank) 응답 코드
       .catch((error) => {
@@ -50,7 +56,7 @@ export function BoardWrite() {
           });
         }
       })
-
+      // 메소드 끝나면 로딩중이 아니게 (저장버튼 다시 활성화 되게)
       .finally(() => {
         setIsSubmitting(false);
       });
@@ -78,6 +84,7 @@ export function BoardWrite() {
             onChange={(e) => setWriter(e.target.value)}
           ></Input>
         </FormControl>
+        {/* isDisabled : 비활성화 isSubmitting의 상태는 boolean이니까 바로 리턴값으로 넣어주었다 */}
         <Button
           isDisabled={isSubmitting}
           onClick={handleSubmit}
