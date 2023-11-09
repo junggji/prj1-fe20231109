@@ -6,6 +6,7 @@ import {
   FormLabel,
   Input,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 
@@ -14,6 +15,8 @@ export function BoardWrite() {
   const [content, setContent] = useState("");
   const [writer, setWriter] = useState("");
 
+  //chakra ui의 toast
+  const toast = useToast();
   function handleSubmit() {
     axios
       .post("/api/board/add", {
@@ -22,8 +25,15 @@ export function BoardWrite() {
         content,
         writer,
       })
-      .then(() => console.log("잘됨"))
-      .catch(() => console.log("안됨"))
+      .then(() => {
+        toast({ description: "새 글이 저장되었습니다.", status: "success" });
+      })
+      .catch(() => {
+        toast({
+          description: "저장 중에 문제가 발생하였습니다.",
+          status: "error",
+        });
+      })
       .finally(() => console.log("끝"));
   }
 
