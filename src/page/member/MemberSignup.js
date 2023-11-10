@@ -16,11 +16,17 @@ export function MemberSignup() {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [email, setEmail] = useState("");
+
   const [idAvailable, setIdAvailable] = useState(false);
+  const [emailAvailable, setEmailAvailable] = useState(false);
 
   const toast = useToast();
 
   let submitAvailable = true;
+
+  if (!emailAvailable) {
+    submitAvailable = false;
+  }
 
   if (!idAvailable) {
     submitAvailable = false;
@@ -70,6 +76,30 @@ export function MemberSignup() {
       .finally(() => console.log("끝"));
   }
 
+  function handleEmailCheck() {
+    const params = new URLSearchParams();
+    params.set("email", email);
+
+    axios
+      .get("/api/member/check?" + params)
+      .then(() => {
+        setEmailAvailable(false);
+        toast({
+          description: "이미 사용중인 email입니다.",
+          status: "warning",
+        });
+      })
+      .catch((error) => {
+        setEmailAvailable(true);
+        if (error.response.status == 404) {
+          toast({
+            description: "사용가능한 email입니다.",
+            status: "success",
+          });
+        }
+      });
+  }
+
   return (
     <Box>
       <h1>회원 가입</h1>
@@ -105,13 +135,20 @@ export function MemberSignup() {
         />
         <FormErrorMessage>암호가 다릅니다.</FormErrorMessage>
       </FormControl>
-      <FormControl>
+      <FormControl isInvalid={!emailAvailable}>
         <FormLabel>email</FormLabel>
-        <Input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <Flex>
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => {
+              setEmailAvailable(false);
+              setEmail(e.target.value);
+            }}
+          />
+          <Button onClick={handleEmailCheck}>중복체크</Button>
+        </Flex>
+        <FormErrorMessage>email 중복 체크를 해주세요.</FormErrorMessage>
       </FormControl>
 
       <Button
