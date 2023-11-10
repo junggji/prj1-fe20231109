@@ -11,6 +11,7 @@ import { HomeLayout } from "./layout/HomeLayout";
 import { BoardView } from "./page/board/BoardView";
 import { BoardEdit } from "./page/board/BoardEdit";
 import { MemberSignup } from "./page/member/MemberSignup";
+import { MemberList } from "./page/member/MemberList";
 
 // homelayout -> 전체 틀 (navigation bar)
 const routes = createBrowserRouter(
@@ -21,6 +22,7 @@ const routes = createBrowserRouter(
       <Route path="board/:id" element={<BoardView />} />
       <Route path="edit/:id" element={<BoardEdit />} />
       <Route path="signup" element={<MemberSignup />} />
+      <Route path="member/list" element={<MemberList />} />
     </Route>,
   ),
 );
