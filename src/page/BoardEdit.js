@@ -103,6 +103,5 @@ export function BoardEdit() {
       {/* navigate(-1) ---> 이전경로로 이동 (+1)은 앞으로 이동 */}
       <Button onClick={() => navigate(-1)}>취소</Button>
     </Box>
-
   );
 }
