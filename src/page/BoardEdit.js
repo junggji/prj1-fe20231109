@@ -46,14 +46,20 @@ export function BoardEdit() {
           description: "수정이 완료되었습니다.",
           status: "success",
         });
-        navigate(-1);
+        navigate("/board/" + id);
       })
-      .catch(() => {
-        toast({
-          description: "실패하였습니다.",
-          status: "error",
-        });
-        console.log("잘안됨");
+      .catch((error) => {
+        if (error.response.status === 400) {
+          toast({
+            description: "요청이 잘못되었습니다.",
+            status: "error",
+          });
+        } else {
+          toast({
+            description: "수정 중에 문제가 발생하였습니다.",
+            status: "error",
+          });
+        }
       })
       .finally(() => console.log("끝"));
   }
