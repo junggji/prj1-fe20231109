@@ -6,6 +6,7 @@ import {
   Input,
   Spinner,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -13,7 +14,11 @@ import { useImmer } from "use-immer";
 import axios from "axios";
 
 export function BoardEdit() {
+  // 객체 복사를 안하고 객체의 값(상태)를 바꾸기 위해서 useImmer를 사용 ------
   const [board, updateBoard] = useImmer(null);
+
+  const toast = useToast();
+  // toast는 객체형태로 사용(description, status)
 
   const navigate = useNavigate();
 
@@ -36,8 +41,20 @@ export function BoardEdit() {
     // PUT /api/board/edit (전송 방식종류 : GET POST DELETE PUT PATCH HEAD ...)
     axios
       .put("/api/board/edit", board)
-      .then(() => console.log("잘됨"))
-      .catch(() => console.log("잘안됨"))
+      .then(() => {
+        toast({
+          description: "수정이 완료되었습니다.",
+          status: "success",
+        });
+        navigate(-1);
+      })
+      .catch(() => {
+        toast({
+          description: "실패하였습니다.",
+          status: "error",
+        });
+        console.log("잘안됨");
+      })
       .finally(() => console.log("끝"));
   }
 
@@ -47,6 +64,7 @@ export function BoardEdit() {
       <FormControl>
         <FormLabel>제목</FormLabel>
         <Input
+          // 객체 복사를 안하고 객체의 값(상태)를 바꾸기 위해서 useImmer를 사용
           value={board.title}
           onChange={(e) =>
             updateBoard((draft) => {
@@ -85,5 +103,6 @@ export function BoardEdit() {
       {/* navigate(-1) ---> 이전경로로 이동 (+1)은 앞으로 이동 */}
       <Button onClick={() => navigate(-1)}>취소</Button>
     </Box>
+
   );
 }
