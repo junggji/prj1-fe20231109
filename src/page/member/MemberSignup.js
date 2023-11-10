@@ -6,6 +6,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
@@ -15,8 +16,9 @@ export function MemberSignup() {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [email, setEmail] = useState("");
-
   const [idAvailable, setIdAvailable] = useState(false);
+
+  const toast = useToast();
 
   let submitAvailable = true;
 
@@ -50,11 +52,19 @@ export function MemberSignup() {
       .get("/api/member/check?" + searchParam.toString())
       .then(() => {
         setIdAvailable(false);
+        toast({
+          description: "이미 사용중인 ID입니다.",
+          status: "warning",
+        });
       })
       .catch((error) => {
         // 404에러 일때만 true로 처리 (값이 없어야 중복아니기 때문에)
         if (error.response.status === 404) {
           setIdAvailable(true);
+          toast({
+            description: "사용 가능한 ID입니다.",
+            status: "success",
+          });
         }
       })
       .finally(() => console.log("끝"));
