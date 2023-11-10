@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -15,7 +16,13 @@ export function MemberSignup() {
   const [passwordCheck, setPasswordCheck] = useState("");
   const [email, setEmail] = useState("");
 
+  const [idAvailable, setIdAvailable] = useState(false);
+
   let submitAvailable = true;
+
+  if (!idAvailable) {
+    submitAvailable = false;
+  }
 
   if (password != passwordCheck) {
     submitAvailable = false;
@@ -33,12 +40,42 @@ export function MemberSignup() {
       .finally(() => console.log("done"));
   }
 
+  function handleIdCheck() {
+    // encoding 대신해주는 코드 ------->    URLSearchparams
+    const searchParam = new URLSearchParams();
+    searchParam.set("id", id);
+
+    // 중복검사는 then 과 catch가 반대결과~
+    axios
+      .get("/api/member/check?" + searchParam.toString())
+      .then(() => {
+        setIdAvailable(false);
+      })
+      .catch((error) => {
+        // 404에러 일때만 true로 처리 (값이 없어야 중복아니기 때문에)
+        if (error.response.status === 404) {
+          setIdAvailable(true);
+        }
+      })
+      .finally(() => console.log("끝"));
+  }
+
   return (
     <Box>
       <h1>회원 가입</h1>
-      <FormControl>
+      <FormControl isInvalid={!idAvailable}>
         <FormLabel>id</FormLabel>
-        <Input value={id} onChange={(e) => setId(e.target.value)} />
+        <Flex>
+          <Input
+            value={id}
+            onChange={(e) => {
+              setId(e.target.value);
+              setIdAvailable(false);
+            }}
+          />
+          <Button onClick={handleIdCheck}>중복확인</Button>
+        </Flex>
+        <FormErrorMessage>중복체크를 해주세요.</FormErrorMessage>
       </FormControl>
       <FormControl isInvalid={password.length === 0}>
         <FormLabel>password</FormLabel>
