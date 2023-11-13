@@ -17,9 +17,11 @@ export function MemberSignup() {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [email, setEmail] = useState("");
+  const [nickName, setNickName] = useState("");
 
   const [idAvailable, setIdAvailable] = useState(false);
   const [emailAvailable, setEmailAvailable] = useState(false);
+  const [nickNameAvailable, setNickNameAvailable] = useState(false);
 
   const toast = useToast();
   const navigate = useNavigate();
@@ -34,7 +36,11 @@ export function MemberSignup() {
     submitAvailable = false;
   }
 
-  if (password != passwordCheck) {
+  if (!nickNameAvailable) {
+    submitAvailable = false;
+  }
+
+  if (password !== passwordCheck) {
     submitAvailable = false;
   }
 
@@ -44,7 +50,7 @@ export function MemberSignup() {
 
   function handleSubmit() {
     axios
-      .post("/api/member/signup", { id, password, email })
+      .post("/api/member/signup", { id, password, email, nickName })
       .then(() => {
         toast({
           description: "회원가입이 완료되었습니다.",
@@ -120,6 +126,30 @@ export function MemberSignup() {
       });
   }
 
+  function handleNickNameCheck() {
+    const params = new URLSearchParams();
+    params.set("nickName", nickName);
+
+    axios
+      .get("/api/member/check?" + params)
+      .then(() => {
+        setNickNameAvailable(false);
+        toast({
+          description: "이미 사용중인 nickName입니다.",
+          status: "warning",
+        });
+      })
+      .catch((error) => {
+        setNickNameAvailable(true);
+        if (error.response.status === 404) {
+          toast({
+            description: "사용가능한 nickName입니다.",
+            status: "success",
+          });
+        }
+      });
+  }
+
   return (
     <Box>
       <h1>회원 가입</h1>
@@ -169,6 +199,21 @@ export function MemberSignup() {
           <Button onClick={handleEmailCheck}>중복체크</Button>
         </Flex>
         <FormErrorMessage>email 중복 체크를 해주세요.</FormErrorMessage>
+      </FormControl>
+
+      <FormControl>
+        <FormLabel>nickName</FormLabel>
+        <Flex>
+          <Input
+            type="text"
+            value={nickName}
+            onChange={(e) => {
+              setNickNameAvailable(false);
+              setNickName(e.target.value);
+            }}
+          />
+          <Button onClick={handleNickNameCheck}>중복체크</Button>
+        </Flex>
       </FormControl>
 
       <Button
