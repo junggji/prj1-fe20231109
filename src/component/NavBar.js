@@ -27,6 +27,8 @@ export function NavBar() {
   }
 
   return (
+    // isAuthenticated는 로그인 여부, isAdmin은 관리자여부
+    // 로그인, 관리자 여부에 따라 Navbar가 보여질 수 있게
     <Flex>
       <Button onClick={() => navigate("/")}>home</Button>
       {isAuthenticated() && (

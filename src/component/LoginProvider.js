@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
 
+//
 export const LoginContext = createContext(null);
 function LoginProvider({ children }) {
   const [login, setLogin] = useState("");
@@ -15,7 +16,9 @@ function LoginProvider({ children }) {
     axios.get("/api/member/login").then((response) => setLogin(response.data));
   }
 
+  // 로그인 여부확인 메소드
   function isAuthenticated() {
+    // 로그인을 안했으면, login이 빈 스트링이므로, login이 빈스트링 아니면 isAuthenticated = true, 빈스트링이면 false -> NAVBAR로
     return login !== "";
   }
 
