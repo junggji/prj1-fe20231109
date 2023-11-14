@@ -7,6 +7,7 @@ export function NavBar() {
 
   // 로그아웃은 따로 이동이 필요한 것이 아니므로 바로 메소드로
   function handleLogout() {
+    // TODO : 로그아웃 후 할 일 추가
     axios.post("/api/member/logout").then(() => console.log("로그아웃 성공"));
   }
 

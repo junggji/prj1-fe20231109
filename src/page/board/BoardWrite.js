@@ -14,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 export function BoardWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [writer, setWriter] = useState("");
   // 전송상태(전송중이면 클릭못하게)
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -30,7 +29,6 @@ export function BoardWrite() {
         // parameter value로 넘어감
         title,
         content,
-        writer,
       })
       .then(() => {
         toast({
@@ -76,13 +74,6 @@ export function BoardWrite() {
             value={content}
             onChange={(e) => setContent(e.target.value)}
           ></Textarea>
-        </FormControl>
-        <FormControl>
-          <FormLabel>작성자</FormLabel>
-          <Input
-            value={writer}
-            onChange={(e) => setWriter(e.target.value)}
-          ></Input>
         </FormControl>
         {/* isDisabled : 비활성화 isSubmitting의 상태는 boolean이니까 바로 리턴값으로 넣어주었다 */}
         <Button
