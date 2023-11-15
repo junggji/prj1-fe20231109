@@ -1,4 +1,17 @@
-import { Box, Button, Input, Textarea } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Heading,
+  Text,
+  Input,
+  Stack,
+  StackDivider,
+  Textarea,
+  Flex,
+} from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -23,7 +36,8 @@ function CommentForm({ boardId }) {
 }
 
 function CommentList({ boardId }) {
-  const [commentList, setCommentList] = useState(null);
+  // 댓글이 없는경우, 첫값이 null일때 오류나서 []로
+  const [commentList, setCommentList] = useState([]);
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -34,7 +48,28 @@ function CommentList({ boardId }) {
       .then((response) => setCommentList(response.data));
   }, []);
 
-  return <Box>댓글 리스트</Box>;
+  return (
+    <Card>
+      <CardHeader>
+        <Heading size="md">댓글 리스트</Heading>
+      </CardHeader>
+      <CardBody>
+        <Stack divider={<StackDivider />} spacing="4">
+          {commentList.map((comment) => (
+            <Box>
+              <Flex justifyContent="space-between">
+                <Heading size="xs">{comment.memberId}</Heading>
+                <Text fontsize="xs">{comment.inserted}</Text>
+              </Flex>
+              <Text pt="2" fontsiz="sm">
+                {comment.comment}
+              </Text>
+            </Box>
+          ))}
+        </Stack>
+      </CardBody>
+    </Card>
+  );
 }
 
 export function CommentContainer({ boardId }) {
