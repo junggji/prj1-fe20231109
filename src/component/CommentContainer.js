@@ -6,7 +6,6 @@ import {
   CardHeader,
   Heading,
   Text,
-  Input,
   Stack,
   StackDivider,
   Textarea,
@@ -145,7 +144,7 @@ export function CommentContainer({ boardId }) {
       .then(() => {
         toast({
           description: "댓글이 삭제되었습니다.",
-          status: "successs",
+          status: "success",
         });
       })
       .catch((error) => {
