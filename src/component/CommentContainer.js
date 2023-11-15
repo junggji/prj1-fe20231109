@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 function CommentForm({ boardId, isSubmitting, onSubmit }) {
   const [comment, setComment] = useState("");
@@ -33,6 +34,11 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
 }
 
 function CommentList({ commentList }) {
+  function handleDelete(id) {
+    // TODO: 모달, 삭제후 리스트 업데이트, then, catch, finally
+    axios.delete("/api/comment/" + id);
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -46,10 +52,19 @@ function CommentList({ commentList }) {
                 <Heading size="xs">{comment.memberId}</Heading>
                 <Text fontSize="xs">{comment.inserted}</Text>
               </Flex>
-              {/* 새로운 줄 출력 */}
-              <Text sx={{ whiteSpace: "pre-wrap" }} pt="2" fontSize="sm">
-                {comment.comment}
-              </Text>
+              <Flex justifyContent="space-between" alignItems="center">
+                {/* 새로운 줄 출력 */}
+                <Text sx={{ whiteSpace: "pre-wrap" }} pt="2" fontSize="sm">
+                  {comment.comment}
+                </Text>
+                <Button
+                  onClick={() => handleDelete(comment.id)}
+                  size="xs"
+                  colorScheme="red"
+                >
+                  <DeleteIcon />
+                </Button>
+              </Flex>
             </Box>
           ))}
         </Stack>
