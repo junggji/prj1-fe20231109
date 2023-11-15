@@ -21,7 +21,7 @@ import {
   ModalFooter,
 } from "@chakra-ui/react";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { LoginContext } from "./LoginProvider";
 
@@ -86,13 +86,21 @@ function CommentList({ commentList, onDeleteModalOpen, isSubmitting }) {
 
 export function CommentContainer({ boardId }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [id, setId] = useState(0);
-
   // 댓글이 없는경우, 첫값이 null일때 오류나서 []로
-  const [commentList, setCommentList] = useState([]);
 
+  const [commentList, setCommentList] = useState([]);
   // generate destructuring ~
+
   const { isOpen, onClose, onOpen } = useDisclosure();
+
+  // useRef : 컴포넌트에서 임시로 값을 저장하는 용도로 사용
+  //  --> 랜더링에 영향을 미치지 않는 값일때 쓴다.
+  // useState와 차이점은 퍼포먼스(성능)에 약간의 차이를 준다. 거의 상관이 없다.
+  // 안쓸때: 랜더링하는 코드 안에서,
+  // 사용: Effect함수 안에서 변경시키거나 읽을때, EventHandle메소드 안에서 변경/읽을 때
+
+  // const [id, setId] = useState(0);
+  const commentIdRef = useRef(0);
 
   const { isAuthenticated } = useContext(LoginContext);
 
@@ -118,7 +126,7 @@ export function CommentContainer({ boardId }) {
   function handleDelete() {
     // TODO: then, catch, finally
     setIsSubmitting(true);
-    axios.delete("/api/comment/" + id).finally(() => {
+    axios.delete("/api/comment/" + commentIdRef.current).finally(() => {
       onClose();
       setIsSubmitting(false);
     });
@@ -126,7 +134,8 @@ export function CommentContainer({ boardId }) {
 
   function handleDeleteModalOpen(id) {
     // id를 어딘가 저장
-    setId(id);
+    // setId(id);
+    commentIdRef.current = id;
 
     // 모달 열기
     onOpen();
