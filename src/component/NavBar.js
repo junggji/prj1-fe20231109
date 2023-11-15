@@ -48,7 +48,7 @@ export function NavBar() {
         <Button onClick={() => navigate("/member/list")}>회원목록</Button>
       )}
       {isAuthenticated() && (
-        <Button onCLick={() => navigate("/member?" + urlParams.toString())}>
+        <Button onClick={() => navigate("/member?" + urlParams.toString())}>
           회원정보
         </Button>
       )}
