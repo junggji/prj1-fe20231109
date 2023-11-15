@@ -32,19 +32,7 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
   );
 }
 
-function CommentList({ boardId }) {
-  // 댓글이 없는경우, 첫값이 null일때 오류나서 []로
-  const [commentList, setCommentList] = useState([]);
-
-  useEffect(() => {
-    const params = new URLSearchParams();
-    params.set("id", boardId);
-
-    axios
-      .get("/api/comment/list?" + params)
-      .then((response) => setCommentList(response.data));
-  }, []);
-
+function CommentList({ commentList }) {
   return (
     <Card>
       <CardHeader>
@@ -52,7 +40,6 @@ function CommentList({ boardId }) {
       </CardHeader>
       <CardBody>
         <Stack divider={<StackDivider />} spacing="4">
-          {/* TODO: 댓글 작성 후 re render*/}
           {commentList.map((comment) => (
             <Box key={comment.id}>
               <Flex justifyContent="space-between">
@@ -74,6 +61,20 @@ function CommentList({ boardId }) {
 export function CommentContainer({ boardId }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // 댓글이 없는경우, 첫값이 null일때 오류나서 []로
+  const [commentList, setCommentList] = useState([]);
+
+  useEffect(() => {
+    if (!isSubmitting) {
+      const params = new URLSearchParams();
+      params.set("id", boardId);
+
+      axios
+        .get("/api/comment/list?" + params)
+        .then((response) => setCommentList(response.data));
+    }
+  }, [isSubmitting]);
+
   function handleSubmit(comment) {
     setIsSubmitting(true);
 
@@ -89,7 +90,7 @@ export function CommentContainer({ boardId }) {
         isSubmitting={isSubmitting}
         onSubmit={handleSubmit}
       />
-      <CommentList boardId={boardId} />
+      <CommentList boardId={boardId} commentList={commentList} />
     </Box>
   );
 }
