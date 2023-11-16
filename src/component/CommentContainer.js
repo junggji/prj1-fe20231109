@@ -50,6 +50,14 @@ function CommentItem({ comment, onDeleteModalOpen }) {
   // 수정글의 상태 --> 초기값 : 원본글
   const [commentEdited, setCommentEdited] = useState(comment.comment);
 
+  function handleSubmit() {
+    axios
+      .put("/api/comment/edit", { id: comment.id, comment: commentEdited })
+      .then(() => console.log("good"))
+      .catch(() => console.log("bad"))
+      .finally(() => console.log("done"));
+  }
+
   return (
     <Box>
       <Flex justifyContent="space-between">
@@ -63,16 +71,21 @@ function CommentItem({ comment, onDeleteModalOpen }) {
             {comment.comment}
           </Text>
           {isEditing && (
-            <Textarea
-              value={commentEdited}
-              onChange={(e) => setCommentEdited(e.target.value)}
-            />
+            <Box>
+              <Textarea
+                value={commentEdited}
+                onChange={(e) => setCommentEdited(e.target.value)}
+              />
+              <Button colorScheme="blue" onClick={handleSubmit}>
+                저장
+              </Button>
+            </Box>
           )}
         </Box>
 
         {hasAccess(comment.memberId) && (
           <Box>
-            {/* 수정버튼, 취소버튼누르면 isEditing 상태변경을 통해 수정박스 보이게 안보이게 */}
+            {/* 수정버튼, 취소버튼누르면 isEditing 상태변경을 통해 TextArea 보이게 안보이게 */}
             {isEditing || (
               <Button
                 size="xs"
