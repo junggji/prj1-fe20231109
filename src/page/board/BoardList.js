@@ -18,6 +18,28 @@ import { ChatIcon } from "@chakra-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 
+function Pagination({ pageInfo }) {
+  const pageNumbers = [];
+  const navigate = useNavigate();
+
+  for (let i = pageInfo.startPageNumber; i <= pageInfo.endPageNumber; i++) {
+    pageNumbers.push(i);
+  }
+
+  console.log(pageNumbers);
+  console.log(pageInfo);
+
+  return (
+    <Box>
+      {pageNumbers.map((pageNumber) => (
+        <Button key={pageNumber} onClick={() => navigate("/?p=" + pageNumber)}>
+          {pageNumber}
+        </Button>
+      ))}
+    </Box>
+  );
+}
+
 export function BoardList() {
   const [boardList, setBoardList] = useState(null);
   const [pageInfo, setPageInfo] = useState(null);
@@ -83,36 +105,7 @@ export function BoardList() {
           </Tbody>
         </Table>
         <Box>
-          <Button value={1} onClick={() => navigate("/?p=1")}>
-            1
-          </Button>
-          <Button value={2} onClick={() => navigate("/?p=2")}>
-            2
-          </Button>
-          <Button value={3} onClick={() => navigate("/?p=3")}>
-            3
-          </Button>
-          <Button value={4} onClick={() => navigate("/?p=4")}>
-            4
-          </Button>
-          <Button value={5} onClick={() => navigate("/?p=5")}>
-            5
-          </Button>
-          <Button value={6} onClick={() => navigate("/?p=6")}>
-            6
-          </Button>
-          <Button value={7} onClick={() => navigate("/?p=7")}>
-            7
-          </Button>
-          <Button value={8} onClick={() => navigate("/?p=8")}>
-            8
-          </Button>
-          <Button value={9} onClick={() => navigate("/?p=9")}>
-            9
-          </Button>
-          <Button value={10} onClick={() => navigate("/?p=10")}>
-            10
-          </Button>
+          <Pagination pageInfo={pageInfo} />
         </Box>
       </Box>
     </Box>
