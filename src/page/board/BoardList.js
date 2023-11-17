@@ -20,10 +20,8 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState(null);
-  const [pagg, setPagg] = useState(1);
 
   const [params] = useSearchParams();
-  params.set("p", pagg);
   console.log(params.toString());
 
   const navigate = useNavigate();
@@ -31,9 +29,9 @@ export function BoardList() {
   // 페이지 처음 로딩
   useEffect(() => {
     axios
-      .get("/api/board/list?p=" + pagg)
+      .get("/api/board/list?" + params)
       .then((response) => setBoardList(response.data));
-  }, [pagg]);
+  }, [params]);
 
   if (boardList === null) {
     return <Spinner />;
@@ -82,38 +80,38 @@ export function BoardList() {
               ))}
           </Tbody>
         </Table>
-        <Flex>
-          <Button value={1} onClick={() => setPagg(1)}>
+        <Box>
+          <Button value={1} onClick={() => navigate("/?p=1")}>
             1
           </Button>
-          <Button value={2} onClick={() => setPagg(2)}>
+          <Button value={2} onClick={() => navigate("/?p=2")}>
             2
           </Button>
-          <Button value={3} onClick={() => setPagg(3)}>
+          <Button value={3} onClick={() => navigate("/?p=3")}>
             3
           </Button>
-          <Button value={4} onClick={() => setPagg(4)}>
+          <Button value={4} onClick={() => navigate("/?p=4")}>
             4
           </Button>
-          <Button value={5} onClick={() => setPagg(5)}>
+          <Button value={5} onClick={() => navigate("/?p=5")}>
             5
           </Button>
-          <Button value={6} onClick={() => setPagg(6)}>
+          <Button value={6} onClick={() => navigate("/?p=6")}>
             6
           </Button>
-          <Button value={7} onClick={() => setPagg(7)}>
+          <Button value={7} onClick={() => navigate("/?p=7")}>
             7
           </Button>
-          <Button value={8} onClick={() => setPagg(8)}>
+          <Button value={8} onClick={() => navigate("/?p=8")}>
             8
           </Button>
-          <Button value={9} onClick={() => setPagg(9)}>
+          <Button value={9} onClick={() => navigate("/?p=9")}>
             9
           </Button>
-          <Button value={10} onClick={() => setPagg(10)}>
+          <Button value={10} onClick={() => navigate("/?p=10")}>
             10
           </Button>
-        </Flex>
+        </Box>
       </Box>
     </Box>
   );
