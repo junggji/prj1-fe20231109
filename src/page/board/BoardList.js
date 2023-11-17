@@ -13,7 +13,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { ChatIcon } from "@chakra-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -23,9 +23,9 @@ export function BoardList() {
   const [pageInfo, setPageInfo] = useState(null);
 
   const [params] = useSearchParams();
-  console.log(params.toString());
-
   const navigate = useNavigate();
+  // useEffect 두번째 파라미터 인자로 params 대신에 location을 넣음(api추천)
+  const location = useLocation();
 
   // 페이지 처음 로딩
   useEffect(() => {
@@ -33,7 +33,7 @@ export function BoardList() {
       setBoardList(response.data.boardList);
       setPageInfo(response.data.pageInfo);
     });
-  }, [params]);
+  }, [location]);
 
   if (boardList === null) {
     return <Spinner />;
