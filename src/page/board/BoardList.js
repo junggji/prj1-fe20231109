@@ -20,6 +20,7 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState(null);
+  const [pageInfo, setPageInfo] = useState(null);
 
   const [params] = useSearchParams();
   console.log(params.toString());
@@ -28,9 +29,10 @@ export function BoardList() {
 
   // 페이지 처음 로딩
   useEffect(() => {
-    axios
-      .get("/api/board/list?" + params)
-      .then((response) => setBoardList(response.data));
+    axios.get("/api/board/list?" + params).then((response) => {
+      setBoardList(response.data.boardList);
+      setPageInfo(response.data.pageInfo);
+    });
   }, [params]);
 
   if (boardList === null) {
