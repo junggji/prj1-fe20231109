@@ -25,10 +25,22 @@ import { LoginContext } from "../../component/LoginProvider";
 import { CommentContainer } from "../../component/CommentContainer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
+import * as PropTypes from "prop-types";
+
+function LikeContainer({ like, onClick }) {
+  if (like === null) {
+    return <Spinner />;
+  }
+  return (
+    <Button variant="ghost" size="xl" onClick={onClick}>
+      <FontAwesomeIcon icon={faHeart} size="xl" />
+    </Button>
+  );
+}
 
 export function BoardView() {
   const [board, setBoard] = useState(null);
-  const [likey, setLikey] = useState(null);
+  const [like, setLike] = useState("");
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -40,16 +52,16 @@ export function BoardView() {
   const { hasAccess, isAdmin } = useContext(LoginContext);
 
   useEffect(() => {
-    axios.get("/api/like/" + id).then((response) => {
-      setLikey(response.data);
-      console.log(likey);
-    });
-  }, []);
-
-  useEffect(() => {
     axios
       .get("/api/board/id/" + id)
       .then((response) => setBoard(response.data));
+  }, []);
+
+  // 좋아요 정보 얻어오는 useEffect
+  useEffect(() => {
+    axios
+      .get("/api/like/board/" + id)
+      .then((response) => setLike(response.data));
   }, []);
 
   if (board === null) {
@@ -78,7 +90,7 @@ export function BoardView() {
   function handleLike() {
     axios
       .post("/api/like", { boardId: board.id })
-      .then(() => console.log(likey))
+      .then((response) => setLike(response.data))
       .catch(() => console.log("bad"))
       .finally(() => console.log("done"));
   }
@@ -87,9 +99,7 @@ export function BoardView() {
     <Box>
       <Flex justifyContent="space-between">
         <Heading size="xl">{board.id}번 글 보기</Heading>
-        <Button variant="ghost" size="xl" onClick={handleLike}>
-          <FontAwesomeIcon icon={faHeart} size="xl" />
-        </Button>
+        <LikeContainer like={like} onClick={handleLike} />
       </Flex>
       <FormControl>
         <FormLabel>제목</FormLabel>
