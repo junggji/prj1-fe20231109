@@ -18,6 +18,7 @@ import {
   ModalOverlay,
   Spinner,
   Textarea,
+  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -33,7 +34,10 @@ function LikeContainer({ like, onClick }) {
   }
   return (
     <Button variant="ghost" size="xl" onClick={onClick}>
-      <FontAwesomeIcon icon={faHeart} size="xl" />
+      {/*<FontAwesomeIcon icon={faHeart} size="xl" />*/}
+      {like.like && <Text>꽉찬 하트</Text>}
+      {like.like || <Text>빈 하트</Text>}
+      <Text>{like.countLike}</Text>
     </Button>
   );
 }
